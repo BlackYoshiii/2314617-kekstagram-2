@@ -1,3 +1,5 @@
+import { openModal } from './fullphoto';
+
 const MIN_LIKES = 15;
 const MAX_LIKES = 200;
 const MAX_COMMENTS = 30;
@@ -49,7 +51,7 @@ const getRandomInt = (min, max) => {
 
 const createComment = (id) => ({
   id,
-  avatar: `img/avatar${getRandomInt(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER)}.svg`,
+  avatar: `img/avatar-${getRandomInt(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER)}.svg`,
   message: MESSAGES[getRandomInt(0, MESSAGES.length - 1)],
   name: NAMES[getRandomInt(0, NAMES.length - 1)],
 });
@@ -65,6 +67,7 @@ const createPhoto = (id) => ({
 const createGallery = (length) =>
   Array.from({ length }, (_, index) => createPhoto(index + 1));
 
+// DOM
 const picturesElement = document.querySelector('.pictures');
 const picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
@@ -86,10 +89,16 @@ const renderGallery = (galleryPhoto) => {
   galleryPhoto.forEach((filledPhoto) => {
     const photoElement = generatePhotoElement(filledPhoto);
 
+    photoElement.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      openModal(filledPhoto);
+    });
+
     picturePhotoFragment.appendChild(photoElement);
   });
 
   picturesElement.appendChild(picturePhotoFragment);
+
 };
 
 renderGallery(createGallery(25));
