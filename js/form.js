@@ -91,46 +91,15 @@ const isHashtagValid = (hashtagList) => hashtagList.every((tag) => HASHTAG_PATTE
 
 const isHashtagsValid = (value) => {
   const datasHashtags = value.toLowerCase().split(' ').filter((tag) => tag.trim() !== '');
-  const hashtags = isHashtagUnique(datasHashtags) && isHashtagsCountValid(datasHashtags) && isHashtagValid(datasHashtags);
+  const areHashtagsValid = isHashtagUnique(datasHashtags) && isHashtagsCountValid(datasHashtags) && isHashtagValid(datasHashtags);
 
-  const checkingHashtags = value === '' ? true : hashtags;
-
-  return checkingHashtags;
+  return value === '' ? true : areHashtagsValid;
 };
 
 const isDecriptionValid = (value) => value.length < MAX_COMMENTS_LENGTH;
 
 pristineForm.addValidator(textHashtags, isHashtagsValid, TAGS_INVALID);
 pristineForm.addValidator(textDescription, isDecriptionValid, COMMENTS_INVALID);
-
-const getCurrentValue = () => parseInt(scaleValue.value.replace('%', ''), 10);
-
-const setScale = (newValue) => {
-  scaleValue.value = `${newValue}%`;
-  uploadPreview.style.transform = `scale(${newValue / 100})`;
-};
-
-scaleSmaller.addEventListener('click', () => {
-  setScale(Math.max(getCurrentValue() - STEP_SCALE, MIN_SCALE));
-});
-
-scaleBigger.addEventListener('click', () => {
-  setScale(Math.min(getCurrentValue() + STEP_SCALE, MAX_SCALE));
-});
-
-noUiSlider.create(effectLevelSlider, {
-  range: {
-    min: 0,
-    max: 1
-  },
-  start: 0.5,
-  step: 0.1,
-  connect: 'lower',
-  format: {
-    to: (value) => Number.isInteger(value) ? value : value.toFixed(1),
-    from: (value) => parseFloat(value)
-  }
-});
 
 const updateFilter = (effect) => {
   const { min, max, step, filter, unit = '' } = EFFECTS[effect];
@@ -163,3 +132,32 @@ const onEffectChange = (evt) => {
 
 effectLevel.classList.add('hidden');
 effectsList.addEventListener('change', onEffectChange);
+
+const getCurrentValue = () => parseInt(scaleValue.value.replace('%', ''), 10);
+
+const setScale = (newValue) => {
+  scaleValue.value = `${newValue}%`;
+  uploadPreview.style.transform = `scale(${newValue / 100})`;
+};
+
+scaleSmaller.addEventListener('click', () => {
+  setScale(Math.max(getCurrentValue() - STEP_SCALE, MIN_SCALE));
+});
+
+scaleBigger.addEventListener('click', () => {
+  setScale(Math.min(getCurrentValue() + STEP_SCALE, MAX_SCALE));
+});
+
+noUiSlider.create(effectLevelSlider, {
+  range: {
+    min: 0,
+    max: 1
+  },
+  start: 0.5,
+  step: 0.1,
+  connect: 'lower',
+  format: {
+    to: (value) => Number.isInteger(value) ? value : value.toFixed(1),
+    from: (value) => parseFloat(value)
+  }
+});
